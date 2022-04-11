@@ -1,9 +1,9 @@
 import React from 'react'
-import ReactDOM from 'react'
+import ReactDom from 'react-dom';
 import TodoList from './TodoList'
 import Form from './Form'
 
-const listOfTasks = [
+const listOfTodos =  [
   {
     name: 'Organize Garage',
     id: 1528817077286, // could look different, you could use a timestamp to generate it
@@ -16,14 +16,12 @@ const listOfTasks = [
   }
 ]
 
-
-
 export default class App extends React.Component {
   constructor(){
     super()
-
     this.state ={
-      listOfTasks: listOfTasks
+      listOfTodos: listOfTodos,
+      itemText: ''
     }
   }
 
@@ -31,23 +29,31 @@ export default class App extends React.Component {
     const newItem = {
       name: item,
       id: Date.now(),
-      completed: false,
+      completed: false
     }
-
     this.setState({
-      listOfTasks: [...this.state.listOfTasks, newItem]
+      listOfTodos: [...this.state.listOfTodos, newItem]
     })
   }
 
-  clearTasks = e =>{
+  clearCompleted = e =>{
     this.setState({
-      groceries: this.state.listOfTasks.filter(item => !item.completed)
+      listOfTodos: this.state.listOfTodos.filter(item => !item.completed)
     })
   }
 
-  toggleTasks= (itemId) => {
+  handleSubmit = e =>{
+    e.preventDefault();
+    this.addItem(e, this.state.itemText)
     this.setState({
-      groceries: this.state.listOfTasks.map(item =>{
+      itemText: ''
+    })
+  }
+
+
+  toggleItem=(itemId)=>{
+    this.setState({
+      listOfTodos: this.state.listOfTodos.map(item =>{
         if(itemId === item.id){
           return {
             ...item,
@@ -59,23 +65,27 @@ export default class App extends React.Component {
     })
   }
 
+  handleChanges = e => {
+    // update state with each keystroke
+    this.setState({
+      itemText: e.target.value
+    })
+  };
+
   render() {
     return (
-      <div className="App">
-        <div className="header">
-           <h2>Todo App</h2>
-        <Form addItem={this.addItem}/>
-         </div>
-        <TodoList
-          listOfTasks={this.state.listOfTasks}
-          toggleItem={this.toggleTasks}
-          />
-        <button
-         onClick={this.clearTasks} 
-         className="clear-btn">Clear Completed
-         
-         </button>
-       </div>
-    );
+      <div>
+      
+      <TodoList
+        listOfTodos= {this.state.listOfTodos}
+        toggleItem= {this.toggleItem}/>
+      <Form 
+        addItem={this.addItem}
+        clearCompleted={this.clearCompleted}
+        handleSubmit = {this.handleSubmit}
+        handleChanges = {this.handleChanges}
+      />
+      </div>
+    )
   }
 }
