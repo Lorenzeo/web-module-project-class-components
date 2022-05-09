@@ -34,23 +34,23 @@ export default class App extends React.Component {
     this.setState({
       listOfTodos: [...this.state.listOfTodos, newItem]
     })
+    
   }
-
+  
   clearCompleted = e =>{
     this.setState({
       listOfTodos: this.state.listOfTodos.filter(item => !item.completed)
     })
   }
-
+  
   handleSubmit = e =>{
     e.preventDefault();
-    this.addItem(e, this.state.itemText)
-    this.setState({
-      itemText: ''
-    })
-  }
+    this.addItem(e, this.state.itemText);
+    e.target.reset()
+  };
 
-
+  
+  
   toggleItem=(itemId)=>{
     this.setState({
       listOfTodos: this.state.listOfTodos.map(item =>{
@@ -64,12 +64,13 @@ export default class App extends React.Component {
       })
     })
   }
-
+  
   handleChanges = e => {
     // update state with each keystroke
     this.setState({
       itemText: e.target.value
     })
+
   };
 
   render() {
